@@ -1,6 +1,9 @@
-public class RealEstateAnalysis{
-    public static void main(String[] args){
+import java.util.*;
+import java.io.*;
 
+public class RealEstateAnalysis{
+    public static void main(String[] args) throws FileNotFoundException{
+        question1();
     }
 
 
@@ -17,31 +20,55 @@ public class RealEstateAnalysis{
     //once the ArrayLists are completed with all the rural home prices and urban home prices, use average method to find the average of each AL
     //compare the two
 
-    //file will be called homeData
-
-    String[] largeCities = {"New York", "Boston", "Chicago", "Los Angeles", "Atlanta", "Philadelphia", "Miami", "New Orleans", "Indianapolis", "Minneapolis", "Denver", "San Francisco", "San Diego", "Phoenix", "Dallas", "Houston", "Nashville", "Las Vegas", "Detroit"};
-    String[] smallCities = {"Worchester", "Stamford", "Winston-Salem", "Carmel", "Cary", "Lancaster", "Asheville", "Ann Arbor", "Greenville", "Falmouth", "Ithaca", "Naples", "Richmond", "Santa Fe", "Sioux Falls", "Sedona", "Kennebunkport", "Whitefish", "Kohler", "Fair Lawn"};
-
-    ArrayList<Double> ruralHomePrices;
-    ArrayList<Double> urbanHomePrices; 
-    String headerLine = fileScanner.nextLine();
-    String[] headerArr = headerLine.split(",");
-    int priceIndex = headerArr.indexOf("median_listing_price");
-    int locationIndex = headerArr.indexOf("cbsa_title");
-
-    while(fileScanner.hasNext()){
-        Stirng currentLine = fileScanner.next();
-        String currentLineArr = currentLine.split(",");
-        double currentPrice = currentLineArr[priceIndex];
-        Stirng currentLocation = currentLineArr[locationIndex];
-        if(largeCites.indexOf[currentLocation] != -1){
-            urbanHomePrices.add(currentPrice);
+    public static ArrayList<String> convertToArrayList(String[] arr){
+        ArrayList<String> arrList = new ArrayList<>();
+        for(int i =0; i< arr.length; i++){
+            arrList.add(arr[i]);
         }
-        else if{smallCities.indexOf[currentLocation] != -1}{
-            ruralHomePrices.add(currentPrice);
-        }
+        return arrList;
     }
 
+    public static void question1() throws FileNotFoundException{
+        File homeData = new File("RDC_Inventory_Core_Metrics_Metro.csv");
+        Scanner fileScanner = new Scanner(homeData);
+
+        String[] largeCities = {"New York", "Boston", "Chicago", "Los Angeles", "Atlanta", "Philadelphia", "Miami", "New Orleans", "Indianapolis", "Minneapolis", "Denver", "San Francisco", "San Diego", "Phoenix", "Dallas", "Houston", "Nashville", "Las Vegas", "Detroit"};
+        String[] smallCities = {"Worchester", "Stamford", "Winston-Salem", "Carmel", "Cary", "Lancaster", "Asheville", "Ann Arbor", "Greenville", "Falmouth", "Ithaca", "Naples", "Richmond", "Santa Fe", "Sioux Falls", "Sedona", "Kennebunkport", "Whitefish", "Kohler", "Fair Lawn"};
+        ArrayList<String> largeCitiesAL = convertToArrayList(largeCities);
+        ArrayList<String> smallCitiesAL = convertToArrayList(smallCities);//fix this to originally be AL
+        ArrayList<Integer> ruralHomePrices = new ArrayList<>();
+        ArrayList<Integer> urbanHomePrices = new ArrayList<>(); 
+        String headerLine = fileScanner.nextLine();
+        ArrayList<String> headerArr = convertToArrayList(headerLine.split(","));
+        int priceIndex = headerArr.indexOf("median_listing_price");
+        int locationIndex = headerArr.indexOf("cbsa_title");
+
+        while(fileScanner.hasNext()){
+            String currentLine = fileScanner.next();
+            String[] currentLineArr = currentLine.split(",");
+            int currentPrice = Integer.parseInt(currentLineArr[priceIndex]);
+            String currentLocation = currentLineArr[locationIndex];
+            if(largeCitiesAL.indexOf(currentLocation) != -1){
+                urbanHomePrices.add(currentPrice);
+             }
+            else if(smallCitiesAL.indexOf(currentLocation) != -1){
+                ruralHomePrices.add(currentPrice);
+            }
+        }
+
+        System.out.println("urban home prices:");
+
+        for(int i =0; i< urbanHomePrices.size(); i++){
+            System.out.println(urbanHomePrices.get(i));
+        }
+
+        System.out.println("rural home prices:");
+
+        for(int i =0; i< ruralHomePrices.size();i++){
+            System.out.println(ruralHomePrices.get(i));
+        }
+
+    }
 
 
 
