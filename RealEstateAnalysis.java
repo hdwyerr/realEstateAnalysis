@@ -3,7 +3,7 @@ import java.io.*;
 
 public class RealEstateAnalysis{
     public static void main(String[] args) throws FileNotFoundException{
-        question1();
+        question2();
     }
 
 
@@ -41,11 +41,16 @@ public class RealEstateAnalysis{
         String headerLine = fileScanner.nextLine();
         ArrayList<String> headerArr = convertToArrayList(headerLine.split(","));
         int priceIndex = headerArr.indexOf("median_listing_price");
+        System.out.println(priceIndex);
         int locationIndex = headerArr.indexOf("cbsa_title");
+        System.out.println(locationIndex);
 
         while(fileScanner.hasNext()){
             String currentLine = fileScanner.next();
             String[] currentLineArr = currentLine.split(",");
+            for(int i =0; i< currentLineArr.length; i++){
+                System.out.println(currentLineArr[i]);
+            }
             int currentPrice = Integer.parseInt(currentLineArr[priceIndex]);
             String currentLocation = currentLineArr[locationIndex];
             if(largeCitiesAL.indexOf(currentLocation) != -1){
@@ -80,6 +85,29 @@ public class RealEstateAnalysis{
     //use while loop to go through data and add for that particular city, add the price of each home to the AL
     //find average of home prices, and display it alongside inventory
     //repeat for each city, and then look at the results and see if any conclusions can be made
+    //using county metrics
+    public static void question2() throws FileNotFoundException{
+        File q2Data = new File("RDC_Inventory_Core_Metrics_State.csv");
+        Scanner fileScanner = new Scanner(q2Data);
+        String header = fileScanner.nextLine();
+        ArrayList<String> headerAL = convertToArrayList(header.split(","));
+        int stateIndex = headerAL.indexOf("state_id");
+        System.out.println("state index: " + stateIndex);
+        ArrayList<String> stateAL = new ArrayList<>();
+        //make an array list of all the states 
+        while(fileScanner.hasNextLine()){
+            String line = fileScanner.nextLine();
+            ArrayList<String> currentLineAL = convertToArrayList(line.split(","));
+            
+            System.out.print(currentLineAL.get(stateIndex) + ", ");
+            
+            //stateAL.add(currentLineAL.get(stateIndex));
+        }
+        System.out.println("while loop done");
+
+        
+
+    }
 
 
 //QUESTION 3: IS THERE A CORRELATION BETWEEN HOME PRICE AND THE AMOUNT OF TIME THE HOUSE TAKES TO SELL?
