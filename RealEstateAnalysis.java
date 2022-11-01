@@ -3,7 +3,7 @@ import java.io.*;
 
 public class RealEstateAnalysis{
     public static void main(String[] args) throws FileNotFoundException{
-        question2();
+        question1();
     }
 
 
@@ -29,10 +29,10 @@ public class RealEstateAnalysis{
     }
 
     public static void question1() throws FileNotFoundException{
-        File homeData = new File("RDC_Inventory_Core_Metrics_Metro.csv");
+        File homeData = new File("Metro_Data_Baby.csv");
         Scanner fileScanner = new Scanner(homeData);
 
-        String[] largeCities = {"New York", "Boston", "Chicago", "Los Angeles", "Atlanta", "Philadelphia", "Miami", "New Orleans", "Indianapolis", "Minneapolis", "Denver", "San Francisco", "San Diego", "Phoenix", "Dallas", "Houston", "Nashville", "Las Vegas", "Detroit"};
+        String[] largeCities = {"New York-Newark-Jersey City", "Boston-Cambridge-Newton", "Chicago-Naperville_Elgin", "Los Angeles-Long Beach-Anaheim", "Atlanta-Sandy Springs-Alpharetta", "Philadelphia-Camden-Wilmington", "Miami-Fort Lauderdale-Pompano Beach", "New Orleans", "Indianapolis", "Minneapolis", "Denver", "San Francisco-Oakland-Berkeley", "San Diego", "Phoenix-Mesa-Chandler", "Dallas-Fort Worth-Arlington", "Houston-The Woodlands-Sugar Land", "Nashville", "Las Vegas", "Detroit-Warren-Dearborn"};
         String[] smallCities = {"Worchester", "Stamford", "Winston-Salem", "Carmel", "Cary", "Lancaster", "Asheville", "Ann Arbor", "Greenville", "Falmouth", "Ithaca", "Naples", "Richmond", "Santa Fe", "Sioux Falls", "Sedona", "Kennebunkport", "Whitefish", "Kohler", "Fair Lawn"};
         ArrayList<String> largeCitiesAL = convertToArrayList(largeCities);
         ArrayList<String> smallCitiesAL = convertToArrayList(smallCities);//fix this to originally be AL
@@ -40,19 +40,25 @@ public class RealEstateAnalysis{
         ArrayList<Integer> urbanHomePrices = new ArrayList<>(); 
         String headerLine = fileScanner.nextLine();
         ArrayList<String> headerArr = convertToArrayList(headerLine.split(","));
-        int priceIndex = headerArr.indexOf("median_listing_price");
+        int priceIndex = headerArr.indexOf("median_listing_price") +1;
         System.out.println(priceIndex);
         int locationIndex = headerArr.indexOf("cbsa_title");
         System.out.println(locationIndex);
 
-        while(fileScanner.hasNext()){
-            String currentLine = fileScanner.next();
-            String[] currentLineArr = currentLine.split(",");
-            for(int i =0; i< currentLineArr.length; i++){
-                System.out.println(currentLineArr[i]);
-            }
-            int currentPrice = Integer.parseInt(currentLineArr[priceIndex]);
-            String currentLocation = currentLineArr[locationIndex];
+        while(fileScanner.hasNextLine()){
+            String currentLine = fileScanner.nextLine();
+            ArrayList<String> currentLineAL = convertToArrayList(currentLine.split(","));
+            System.out.println(currentLineAL.size());
+            
+            int currentPrice =Integer.parseInt(currentLineAL.get(priceIndex));
+            
+            
+            
+            System.out.println("current price: " + currentPrice);
+
+            String currentLocation = currentLineAL.get(locationIndex);
+            System.out.println("currentLocation is:  " +currentLocation);
+            System.out.println(largeCitiesAL.indexOf(currentLocation));
             if(largeCitiesAL.indexOf(currentLocation) != -1){
                 urbanHomePrices.add(currentPrice);
              }
@@ -60,14 +66,14 @@ public class RealEstateAnalysis{
                 ruralHomePrices.add(currentPrice);
             }
         }
-
-        System.out.println("urban home prices:");
+        System.out.println("loop done");
+        System.out.println("urban home prices length:" + urbanHomePrices.size());
 
         for(int i =0; i< urbanHomePrices.size(); i++){
             System.out.println(urbanHomePrices.get(i));
         }
 
-        System.out.println("rural home prices:");
+        System.out.println("rural home prices size:" + ruralHomePrices.size());
 
         for(int i =0; i< ruralHomePrices.size();i++){
             System.out.println(ruralHomePrices.get(i));
@@ -115,5 +121,13 @@ public class RealEstateAnalysis{
     //create two parallel ArrayLists, homePrice and sellingTime
     //for each house, use a while loop to go through the data and add its price and selling time to the corresponding AL
     //compare prices and selling time and see if there are any trends 
+    //waht coast ahs a higher listing price, east or west
+
+    public static void question3() throws FileNotFoundException{
+        File q3Data = new File("RDC_Inventory_Core_Metrics_State.csv");
+        Scanner fileScanner = new Scanner(q3Data);
+
+        
+    }
 }
 
