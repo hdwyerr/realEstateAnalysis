@@ -3,7 +3,7 @@ import java.io.*;
 
 public class RealEstateAnalysis{
     public static void main(String[] args) throws FileNotFoundException{
-        question1();
+        question3();
     }
 
 
@@ -83,7 +83,7 @@ public class RealEstateAnalysis{
 
 
 
-//QUESTION 2: WHAT IMPACT DOES THE AMOUNT OF INVENTORY HAVE ON LIST PRICE?
+/*/QUESTION 2: WHAT IMPACT DOES THE AMOUNT OF INVENTORY HAVE ON LIST PRICE?
     //randomly select 5 cities
     //make inventoryIndex variagble
     //for each city, use invnetortyIndex to find amount of homes for sale
@@ -121,13 +121,52 @@ public class RealEstateAnalysis{
     //create two parallel ArrayLists, homePrice and sellingTime
     //for each house, use a while loop to go through the data and add its price and selling time to the corresponding AL
     //compare prices and selling time and see if there are any trends 
-    //waht coast ahs a higher listing price, east or west
+    //waht coast ahs a higher listing price, east or west*/
 
     public static void question3() throws FileNotFoundException{
         File q3Data = new File("RDC_Inventory_Core_Metrics_State.csv");
         Scanner fileScanner = new Scanner(q3Data);
+        ArrayList<String> headerAL = convertToArrayList(fileScanner.nextLine().split(","));
+        int stateIndex = headerAL.indexOf("state");
+        int priceIndex = headerAL.indexOf("median_listing_price");
+        ArrayList<String> westCoastStates = new ArrayList<>(Arrays.asList("Washington", "Oregon", "California"));
+        ArrayList<String> eastCoastStates = new ArrayList<>(Arrays.asList("Maine", "New Hampshire", "Massachusetts", "Rhode Island", "Connecticut", "New York", "New Jersey", "Delaware", "Maryland", "Virginia", "North Carolina", "South Carolina", "Georgia", "Florida"));
+        ArrayList<Integer> westCoastPrices = new ArrayList<>();
+        ArrayList<Integer> eastCoastPrices = new ArrayList<>();
+
+        while(fileScanner.hasNextLine()){
+            ArrayList<String> currentLineAL = convertToArrayList(fileScanner.nextLine().split(","));
+            String currentState = currentLineAL.get(stateIndex);
+            int currentPrice = Integer.parseInt(currentLineAL.get(priceIndex));
+            System.out.print("state =" + currentState);
+            System.out.print(" price =" + currentPrice);
+            System.out.print(" wci= " + westCoastStates.indexOf(currentState));
+            System.out.print(" eci = " + eastCoastStates.indexOf(currentState));
+            System.out.println("");
+            if(westCoastStates.indexOf(currentState) != -1){
+                westCoastPrices.add(currentPrice);
+            }
+            else if(eastCoastStates.indexOf(currentState) != -1){
+                eastCoastPrices.add(currentPrice);
+            }
+            System.out.println("past if else");
+        }
+        System.out.println("while loop done");
+        int westCoastAvg = averageAL(westCoastPrices);
+        int eastCoastAvg = averageAL(eastCoastPrices);
+
+        System.out.println("The average price for west coast homes is: " + westCoastAvg);
+        System.out.println("The average price for east coast home is: " + eastCoastAvg);
 
         
+    }
+
+    public static int averageAL(ArrayList<Integer> list){
+        int sum =0;
+        for(int i =0; i< list.size(); i++){
+            sum += list.get(i);
+        }
+        return sum/list.size();
     }
 }
 
