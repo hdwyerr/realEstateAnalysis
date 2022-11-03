@@ -3,7 +3,7 @@ import java.io.*;
 
 public class RealEstateAnalysis{
     public static void main(String[] args) throws FileNotFoundException{
-        question3();
+        question2();
     }
 
 
@@ -33,19 +33,20 @@ public class RealEstateAnalysis{
         Scanner fileScanner = new Scanner(homeData);
 
         String[] largeCities = {"New York-Newark-Jersey City", "Boston-Cambridge-Newton", "Chicago-Naperville_Elgin", "Los Angeles-Long Beach-Anaheim", "Atlanta-Sandy Springs-Alpharetta", "Philadelphia-Camden-Wilmington", "Miami-Fort Lauderdale-Pompano Beach", "New Orleans", "Indianapolis", "Minneapolis", "Denver", "San Francisco-Oakland-Berkeley", "San Diego", "Phoenix-Mesa-Chandler", "Dallas-Fort Worth-Arlington", "Houston-The Woodlands-Sugar Land", "Nashville", "Las Vegas", "Detroit-Warren-Dearborn"};
-        String[] smallCities = {"Worchester", "Stamford", "Winston-Salem", "Carmel", "Cary", "Lancaster", "Asheville", "Ann Arbor", "Greenville", "Falmouth", "Ithaca", "Naples", "Richmond", "Santa Fe", "Sioux Falls", "Sedona", "Kennebunkport", "Whitefish", "Kohler", "Fair Lawn"};
+        String[] smallCities = {"Worcester", "New Haven-Milford", "Winston-Salem", "Bloomington", "Raleigh-Cary", "Lancaster", "Asheville", "Ann Arbor", "Greenville", "Falmouth", "Ithaca", "Naples-Marco Island", "Richmond", "Santa Fe", "Sioux City", "Pueblo", "Yuma", "Tupelo", "Missoula", "Beckley"};
         ArrayList<String> largeCitiesAL = convertToArrayList(largeCities);
         ArrayList<String> smallCitiesAL = convertToArrayList(smallCities);//fix this to originally be AL
         ArrayList<Integer> ruralHomePrices = new ArrayList<>();
         ArrayList<Integer> urbanHomePrices = new ArrayList<>(); 
         String headerLine = fileScanner.nextLine();
         ArrayList<String> headerArr = convertToArrayList(headerLine.split(","));
-        int priceIndex = headerArr.indexOf("median_listing_price") +1;
+        int priceIndex = headerArr.indexOf("median_listing_price")+1;
         System.out.println(priceIndex);
         int locationIndex = headerArr.indexOf("cbsa_title");
         System.out.println(locationIndex);
 
         while(fileScanner.hasNextLine()){
+            System.out.println("Start of loop");
             String currentLine = fileScanner.nextLine();
             ArrayList<String> currentLineAL = convertToArrayList(currentLine.split(","));
             System.out.println(currentLineAL.size());
@@ -53,20 +54,25 @@ public class RealEstateAnalysis{
             int currentPrice =Integer.parseInt(currentLineAL.get(priceIndex));
             
             
-            
             System.out.println("current price: " + currentPrice);
 
-            String currentLocation = currentLineAL.get(locationIndex);
+            String currentLocation = currentLineAL.get(locationIndex).substring(1);
             System.out.println("currentLocation is:  " +currentLocation);
             System.out.println(largeCitiesAL.indexOf(currentLocation));
+
             if(largeCitiesAL.indexOf(currentLocation) != -1){
                 urbanHomePrices.add(currentPrice);
              }
             else if(smallCitiesAL.indexOf(currentLocation) != -1){
                 ruralHomePrices.add(currentPrice);
             }
+            
+            
+            
+
+            
         }
-        System.out.println("loop done");
+        
         System.out.println("urban home prices length:" + urbanHomePrices.size());
 
         for(int i =0; i< urbanHomePrices.size(); i++){
@@ -79,11 +85,14 @@ public class RealEstateAnalysis{
             System.out.println(ruralHomePrices.get(i));
         }
 
+        System.out.println("The average list price in larger cities is: " + averageAL(urbanHomePrices));
+        System.out.println("The average list price in smaller/rural cities is: " + averageAL(ruralHomePrices));
+
     }
 
 
 
-/*/QUESTION 2: WHAT IMPACT DOES THE AMOUNT OF INVENTORY HAVE ON LIST PRICE?
+//QUESTION 2: WHAT IMPACT DOES THE AMOUNT OF INVENTORY HAVE ON LIST PRICE?
     //randomly select 5 cities
     //make inventoryIndex variagble
     //for each city, use invnetortyIndex to find amount of homes for sale
@@ -92,24 +101,54 @@ public class RealEstateAnalysis{
     //find average of home prices, and display it alongside inventory
     //repeat for each city, and then look at the results and see if any conclusions can be made
     //using county metrics
+    //randomly pick 5 states
+    //find priceIndex and inventoryIndex
+    //make 3 AL: state, price, inventory
+    //display results 
+
+    //WHICH STATE HAS HIGHEST LIST PRICE, AND WHICH STATE AHS LOWEST LIST PRICE 
     public static void question2() throws FileNotFoundException{
         File q2Data = new File("RDC_Inventory_Core_Metrics_State.csv");
         Scanner fileScanner = new Scanner(q2Data);
         String header = fileScanner.nextLine();
         ArrayList<String> headerAL = convertToArrayList(header.split(","));
-        int stateIndex = headerAL.indexOf("state_id");
+        int stateIndex = headerAL.indexOf("state");
+        int priceIndex = headerAL.indexOf("median_listing_price");
         System.out.println("state index: " + stateIndex);
         ArrayList<String> stateAL = new ArrayList<>();
+        ArrayList<Integer> priceAL = new ArrayList<>();
+        
         //make an array list of all the states 
+        //make an al of the average price for each state, they correspond
         while(fileScanner.hasNextLine()){
             String line = fileScanner.nextLine();
             ArrayList<String> currentLineAL = convertToArrayList(line.split(","));
             
-            System.out.print(currentLineAL.get(stateIndex) + ", ");
-            
-            //stateAL.add(currentLineAL.get(stateIndex));
+            stateAL.add(currentLineAL.get(stateIndex));
+            priceAL.add(Integer.parseInt(currentLineAL.get(priceIndex)));
         }
         System.out.println("while loop done");
+        int lowestPrice =100000000;
+        int lowestPriceIndex =0;
+        for(int i =0; i< priceAL.size(); i++){
+            if(priceAL.get(i) < lowestPrice){
+                lowestPrice = priceAL.get(i);
+                lowestPriceIndex =i; 
+            }
+        }
+
+        int highestPrice =0;
+        int highestPriceIndex =0;
+        for(int i =0; i< priceAL.size(); i++){
+            if(priceAL.get(i) > highestPrice){
+                highestPrice = priceAL.get(i);
+                highestPriceIndex = i;
+            }
+        }
+
+        System.out.println("The state with the lowest avereage list price is " + stateAL.get(lowestPriceIndex) + ", with a price of $" +lowestPrice);
+
+        System.out.println("The state with the highest average list price is " + stateAL.get(highestPriceIndex) + ", with a price of $" +highestPrice);
 
         
 
