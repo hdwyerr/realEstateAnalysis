@@ -6,6 +6,7 @@ public class RealEstateAnalysis{
         citiesVsRuralPrices();
         mostAndLeastExpensiveStates();
         mostExpensiveCoast();
+        //main method running methods for each question
     }
 
 
